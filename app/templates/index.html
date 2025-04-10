@@ -12,8 +12,8 @@
     <div class="container">
         <h1>Transcriber</h1>
         {% if user %}
-        <form id="upload-form" action="/upload" method="post" enctype="multipart/form-data">
-            <input type="file" name="file" accept="audio/*" required>
+        <form id="upload-form">
+            <input type="file" name="file" id="file-input" accept=".m4a,.mp3,.wav,.ogg,.webm,.aac" required>
             <button type="submit">Transcrever</button>
         </form>
         <p>Logado como: {{ user }}</p>
@@ -27,24 +27,61 @@
             <button type="submit">Entrar</button>
         </form>
         {% endif %}
-        <h3>Transcrição:</h3>
-        <p id="transcription" style="white-space: pre-wrap;">
-            {{ transcription or '' }}
-        </p>
 
+        <h3>Transcrição:</h3>
+        <p id="transcription" style="white-space: pre-wrap;">{{ transcription or '' }}</p>
     </div>
+
+    <!-- Loader -->
     <div id="loader"
-        style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(255,255,255,0.7); z-index:9999; text-align:center;">
+        style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:#fff; z-index:9999; text-align:center;">
         <div style="position:relative; top:40%; font-size:24px;">⏳ Transcrevendo... Aguarde...</div>
     </div>
+
     <script>
         const form = document.getElementById("upload-form");
         const loader = document.getElementById("loader");
+        const fileInput = document.getElementById("file-input");
+        const transcriptionElement = document.getElementById("transcription");
 
-        form?.addEventListener("submit", function () {
+        form?.addEventListener("submit", async function (e) {
+            e.preventDefault();
+
+            const file = fileInput.files[0];
+            if (!file) return;
+
             loader.style.display = "block";
-            if (transcription) {
-                transcription.innerText = "";
+            transcriptionElement.innerText = "";
+
+            const formData = new FormData();
+            formData.append("file", file);
+
+            try {
+                const response = await fetch("/upload", {
+                    method: "POST",
+                    body: formData
+                });
+
+                // const responseText = await response.text();
+                const html = await response.text();
+
+                console.log("Status:", response.status);
+                console.log("Headers:", [...response.headers.entries()]);
+                console.log("Body:", html);
+
+
+                if (!response.ok) {
+                    throw new Error(`Erro ao transcrever: ${response.status} - ${html}`);
+                }
+
+                document.open();
+                document.write(html);
+                document.close();
+            } catch (err) {
+                loader.innerHTML = `<div style="position:relative; top:40%; font-size:24px; color:red;">
+                    ❌ Erro ao transcrever: ${err.message}
+                </div>`;
+                setTimeout(() => loader.style.display = "none", 3000);
             }
         });
     </script>

@@ -12,6 +12,7 @@ services:
       - certs:/etc/nginx/certs
       - vhost:/etc/nginx/vhost.d
       - html:/usr/share/nginx/html
+      - ./nginx-proxy.conf:/etc/nginx/conf.d/upload.conf:ro
     networks:
       - network
 
