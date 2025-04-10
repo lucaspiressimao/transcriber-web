@@ -1,37 +1,110 @@
 body {
-    font-family: Arial, sans-serif;
-    background-color: #f4f4f4;
-    color: #333;
-    padding: 40px;
-    text-align: center;
+    font-family: sans-serif;
+    background: #f6f6f6;
+    margin: 0;
+    padding: 0;
 }
+
 .container {
-    max-width: 600px;
-    margin: auto;
-    padding: 20px;
+    max-width: 500px;
+    margin: 40px auto;
     background: white;
+    padding: 20px;
     border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 }
-input, button {
-    margin: 5px;
+
+h1 {
+    text-align: center;
+    margin-bottom: 24px;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+input[type="file"],
+input[type="text"],
+input[type="password"] {
     padding: 10px;
-    width: 80%;
+    font-size: 16px;
+    border: 1px solid #ddd;
     border-radius: 4px;
-    border: 1px solid #ccc;
 }
+
 button {
     background-color: #007bff;
     color: white;
+    padding: 12px;
+    border: none;
+    border-radius: 4px;
+    font-size: 16px;
     cursor: pointer;
 }
+
 button:hover {
     background-color: #0056b3;
 }
-pre {
-    text-align: left;
-    white-space: pre-wrap;
-    background: #f0f0f0;
-    padding: 10px;
-    border-radius: 6px;
+
+#transcription {
+    margin-top: 20px;
+}
+
+#error {
+    color: red;
+}
+
+#loader {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.8);
+    z-index: 9999;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 20px;
+    text-align: center;
+}
+
+a {
+    display: inline-block;
+    margin-top: 10px;
+    text-align: center;
+    color: #007bff;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+@media (max-width: 600px) {
+    html {
+        font-size: 16px;
+        /* aumenta todas as fontes proporcionalmente */
+    }
+
+    body {
+        padding: 10px;
+    }
+
+    .container {
+        min-height: 90vh; /* 90% da altura da viewport */
+        width: 100%;
+        margin: 0;
+        border-radius: 0;
+        box-shadow: none;
+        padding: 15px;
+    }
+
+    button {
+        font-size: 15px;
+        padding: 10px;
+    }
 }

@@ -1,26 +1,25 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Transcriber</title>
     <link rel="stylesheet" href="/static/style.css">
 </head>
-
 <body>
-
     <div class="container">
         <h1>Transcriber</h1>
+
         {% if user %}
         <form id="upload-form">
-            <input type="file" name="file" id="file-input" accept=".m4a,.mp3,.wav,.ogg,.webm,.aac" required>
+            <input type="file" name="file" id="file-input" accept="audio/*" required>
             <button type="submit">Transcrever</button>
         </form>
-        <p>Logado como: {{ user }}</p>
+        <p style="text-align:center;">Logado como: {{ user }}</p>
         <a href="/logout">Sair</a>
         {% else %}
         <h2>Login</h2>
-        {% if login_error %}<p style="color:red">Credenciais inválidas</p>{% endif %}
+        {% if login_error %}<p class="error">Credenciais inválidas</p>{% endif %}
         <form action="/login" method="post">
             <input type="text" name="username" placeholder="Usuário" required>
             <input type="password" name="password" placeholder="Senha" required>
@@ -46,11 +45,10 @@
 
         form?.addEventListener("submit", async function (e) {
             e.preventDefault();
-
             const file = fileInput.files[0];
             if (!file) return;
 
-            loader.style.display = "block";
+            loader.style.display = "flex";
             transcriptionElement.innerText = "";
 
             const formData = new FormData();
@@ -62,29 +60,17 @@
                     body: formData
                 });
 
-                // const responseText = await response.text();
-                const html = await response.text();
-
-                console.log("Status:", response.status);
-                console.log("Headers:", [...response.headers.entries()]);
-                console.log("Body:", html);
-
-
-                if (!response.ok) {
-                    throw new Error(`Erro ao transcrever: ${response.status} - ${html}`);
-                }
+                const text = await response.text();
+                if (!response.ok) throw new Error(text);
 
                 document.open();
-                document.write(html);
+                document.write(text);
                 document.close();
             } catch (err) {
-                loader.innerHTML = `<div style="position:relative; top:40%; font-size:24px; color:red;">
-                    ❌ Erro ao transcrever: ${err.message}
-                </div>`;
+                loader.innerHTML = `<div style="color:red;">❌ Erro ao transcrever: ${err.message}</div>`;
                 setTimeout(() => loader.style.display = "none", 3000);
             }
         });
     </script>
 </body>
-
 </html>

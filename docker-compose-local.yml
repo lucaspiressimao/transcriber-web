@@ -1,0 +1,58 @@
+version: '3.9'
+
+services:
+  nginx-proxy:
+    image: nginxproxy/nginx-proxy
+    container_name: nginx-proxy
+    ports:
+      - "80:80"
+    volumes:
+      - /var/run/docker.sock:/tmp/docker.sock:ro
+      - certs:/etc/nginx/certs
+      - vhost:/etc/nginx/vhost.d
+      - html:/usr/share/nginx/html
+      - ./nginx-proxy.conf:/etc/nginx/conf.d/upload.conf:ro
+    networks:
+      - network
+
+  db:
+    image: postgres:15
+    restart: always
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: transcriber
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    networks:
+      - network
+
+  app:
+    build: .
+    expose:
+      - "8000"
+    extra_hosts:
+      - "local.transcriber.dooloop.com.br:host-gateway"
+    environment:
+      - VIRTUAL_HOST=transcriber.dooloop.com.br,local.transcriber.dooloop.com.br
+      - VIRTUAL_PORT=8000
+      - DATABASE_URL=postgresql+asyncpg://user:password@db:5432/transcriber
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - SECRET_KEY=${SECRET_KEY}
+    depends_on:
+      - db
+      - nginx-proxy
+    networks:
+      - network
+
+volumes:
+  pgdata:
+  certs:
+  acme:
+  vhost:
+  html:
+
+networks:
+  network:
+    name: network
+    driver: bridge
