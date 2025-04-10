@@ -52,6 +52,8 @@ services:
     extra_hosts:
       - "local.transcriber.dooloop.com.br:host-gateway"
     environment:
+      - LETSENCRYPT_HOST=transcriber.dooloop.com.br
+      - LETSENCRYPT_EMAIL=seu-email@dominio.com
       - VIRTUAL_HOST=transcriber.dooloop.com.br,local.transcriber.dooloop.com.br
       - VIRTUAL_PORT=8000
       - DATABASE_URL=postgresql+asyncpg://user:password@db:5432/transcriber
