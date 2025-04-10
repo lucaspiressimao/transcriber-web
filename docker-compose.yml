@@ -1,6 +1,16 @@
 version: '3.9'
 
 services:
+  nginx-proxy:
+    image: nginxproxy/nginx-proxy
+    container_name: nginx-proxy
+    ports:
+      - "80:80"
+    volumes:
+      - /var/run/docker.sock:/tmp/docker.sock:ro
+    networks:
+      - network
+    
   db:
     image: postgres:15
     restart: always
@@ -10,17 +20,32 @@ services:
       POSTGRES_DB: transcriber
     volumes:
       - pgdata:/var/lib/postgresql/data
+    networks:
+      - network
 
   app:
     build: .
-    ports:
-      - "8000:8000"
+    expose:
+      - "8000"
+    extra_hosts:
+      - "local.transcriber.dooloop.com.br:host-gateway"
     environment:
+      - VIRTUAL_HOST=transcriber.dooloop.com.br,local.transcriber.dooloop.com.br
+      - VIRTUAL_PORT=8000
       - DATABASE_URL=postgresql+asyncpg://user:password@db:5432/transcriber
       - OPENAI_API_KEY=${OPENAI_API_KEY}
       - SECRET_KEY=${SECRET_KEY}
     depends_on:
       - db
+      - nginx-proxy
+    networks:
+      - network
 
 volumes:
   pgdata:
+
+
+networks:
+  network:
+    name: network
+    driver: bridge

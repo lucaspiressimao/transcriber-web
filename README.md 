@@ -13,6 +13,11 @@ cp .env.example .env
 make run
 ```
 
-Acesse: http://localhost:8000
+adicione 127.0.0.1 local.transcriber.dooloop.com.br >> /etc/hosts
+Acesse: local.transcriber.dooloop.com.br
 
 Usuários devem se registrar e fazer login para enviar áudios.
+
+scp -r /Users/lucaspiressimao/projetos/pessoal/transcriber-web root@143.244.186.14:/home
+
+em prod docker compose up -d
