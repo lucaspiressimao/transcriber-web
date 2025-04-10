@@ -65,7 +65,10 @@ services:
 
 volumes:
   pgdata:
-
+  certs:
+  acme:
+  vhost:
+  html:
 
 networks:
   network:
