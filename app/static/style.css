@@ -52,7 +52,7 @@ button:hover {
     margin-top: 20px;
 }
 
-#error {
+.error {
     color: red;
 }
 
@@ -84,6 +84,43 @@ a:hover {
     text-decoration: underline;
 }
 
+#copy-btn {
+    margin-top: 15px;
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+#copy-btn:hover {
+    background-color: #0056b3;
+}
+
+#transcription-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    /* para mobile, se precisar quebrar */
+    gap: 10px;
+}
+
+#transcription-bar h3 {
+    margin: 0;
+    flex-shrink: 0;
+}
+
+#transcription-bar button {
+    flex-shrink: 0;
+}
+
+#copy-btn {
+    width: auto !important;
+}
+
 @media (max-width: 600px) {
     html {
         font-size: 16px;
@@ -95,7 +132,8 @@ a:hover {
     }
 
     .container {
-        min-height: 90vh; /* 90% da altura da viewport */
+        min-height: 90vh;
+        /* 90% da altura da viewport */
         width: 100%;
         margin: 0;
         border-radius: 0;

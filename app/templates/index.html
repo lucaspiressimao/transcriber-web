@@ -1,18 +1,20 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Transcriber</title>
     <link rel="stylesheet" href="/static/style.css">
 </head>
+
 <body>
     <div class="container">
         <h1>Transcriber</h1>
 
         {% if user %}
         <form id="upload-form">
-            <input type="file" name="file" id="file-input" accept="audio/*" required>
+            <input type="file" name="file" id="file-input" accept=".m4a,.mp3,.wav,.ogg,.webm,.aac" required>
             <button type="submit">Transcrever</button>
         </form>
         <p style="text-align:center;">Logado como: {{ user }}</p>
@@ -27,7 +29,11 @@
         </form>
         {% endif %}
 
-        <h3>Transcrição:</h3>
+        <div id="transcription-bar" >
+            <h3>Transcrição</h3>
+            <button onclick="copiarTranscricao()" id="copy-btn">📋 Copiar transcrição</button>
+        </div>
+
         <p id="transcription" style="white-space: pre-wrap;">{{ transcription or '' }}</p>
     </div>
 
@@ -71,6 +77,16 @@
                 setTimeout(() => loader.style.display = "none", 3000);
             }
         });
+
+        function copiarTranscricao() {
+            const texto = document.getElementById("transcription").innerText;
+            navigator.clipboard.writeText(texto).then(() => {
+                alert("✅ Transcrição copiada para a área de transferência!");
+            }).catch(err => {
+                alert("Erro ao copiar: " + err);
+            });
+        }
     </script>
 </body>
+
 </html>
