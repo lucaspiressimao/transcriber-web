@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Transcriber</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+
+<body>
+
+    <div class="container">
+        <h1>Transcriber</h1>
+        {% if user %}
+        <form id="upload-form" action="/upload" method="post" enctype="multipart/form-data">
+            <input type="file" name="file" accept="audio/*" required>
+            <button type="submit">Transcrever</button>
+        </form>
+        <p>Logado como: {{ user }}</p>
+        <a href="/logout">Sair</a>
+        {% else %}
+        <h2>Login</h2>
+        {% if login_error %}<p style="color:red">Credenciais inválidas</p>{% endif %}
+        <form action="/login" method="post">
+            <input type="text" name="username" placeholder="Usuário" required>
+            <input type="password" name="password" placeholder="Senha" required>
+            <button type="submit">Entrar</button>
+        </form>
+        {% endif %}
+        <h3>Transcrição:</h3>
+        <p id="transcription" style="white-space: pre-wrap;">
+            {{ transcription or '' }}
+        </p>
+
+    </div>
+    <div id="loader"
+        style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(255,255,255,0.7); z-index:9999; text-align:center;">
+        <div style="position:relative; top:40%; font-size:24px;">⏳ Transcrevendo... Aguarde...</div>
+    </div>
+    <script>
+        const form = document.getElementById("upload-form");
+        const loader = document.getElementById("loader");
+
+        form?.addEventListener("submit", function () {
+            loader.style.display = "block";
+            if (transcription) {
+                transcription.innerText = "";
+            }
+        });
+    </script>
+</body>
+
+</html>

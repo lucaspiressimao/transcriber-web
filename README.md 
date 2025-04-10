@@ -1,0 +1,18 @@
+# Transcriber Web
+
+Plataforma web para transcrição de áudios via OpenAI Whisper.
+
+## Requisitos
+- Docker + Docker Compose
+- Conta na OpenAI
+
+## Como usar
+```bash
+cp .env.example .env
+# edite com sua API_KEY e SECRET
+make run
+```
+
+Acesse: http://localhost:8000
+
+Usuários devem se registrar e fazer login para enviar áudios.

@@ -1,0 +1,23 @@
+# Ambiente Python
+__pycache__/
+*.py[cod]
+*.env
+.env
+
+# Docker
+*.pid
+*.log
+
+# VSCode e IDEs
+.vscode/
+.idea/
+
+# Arquivos temporários
+*.sqlite3
+*.db
+*.bak
+*.swp
+
+# Arquivos do sistema
+.DS_Store
+Thumbs.db
