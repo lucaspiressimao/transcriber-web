@@ -109,7 +109,7 @@ DEFAULT_USERS=admin:admin123,tester:test123
 
 ## 📜 License
 
-MIT © [Your Name or Organization]
+MIT ©
 
 ---
 
