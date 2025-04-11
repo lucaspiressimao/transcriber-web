@@ -1,0 +1,19 @@
+{
+    "title": "Transcriber",
+    "login": "Login",
+    "logout": "Logout",
+    "username": "Username",
+    "password": "Password",
+    "logged_in_as": "Logged in as:",
+    "transcribe": "Transcribe",
+    "transcription": "Transcription",
+    "copy_transcription": "📋 Copy",
+    "invalid_credentials": "Invalid credentials",
+    "transcribing_wait": "⏳ Transcribing... Please wait...",
+    "transcribing_error": "Transcribing error",
+    "upload_error": "Unsupported file format.",
+    "success_copy": "✅ Transcription copied to clipboard!",
+    "error_copy": "Failed to copy",
+    "enter": "Enter"
+  }
+  

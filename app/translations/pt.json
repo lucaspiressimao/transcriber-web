@@ -1,0 +1,19 @@
+{
+    "title": "Transcriber",
+    "login": "Entrar",
+    "logout": "Sair",
+    "username": "Usuário",
+    "password": "Senha",
+    "logged_in_as": "Logado como:",
+    "transcribe": "Transcrever",
+    "transcription": "Transcrição",
+    "copy_transcription": "📋 Copiar",
+    "invalid_credentials": "Credenciais inválidas",
+    "transcribing_wait": "⏳ Transcrevendo... Aguarde...",
+    "transcribing_error": "Erro ao transcrever",
+    "upload_error": "Formato de arquivo não suportado.",
+    "success_copy": "✅ Transcrição copiada para a área de transferência!",
+    "error_copy": "Erro ao copiar",
+    "enter": "Entrar"
+  }
+  

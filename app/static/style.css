@@ -85,14 +85,17 @@ a:hover {
 }
 
 #copy-btn {
-    margin-top: 15px;
-    padding: 10px 20px;
+    margin-top: 5px;
     background-color: #007bff;
     color: white;
     border: none;
     border-radius: 6px;
     cursor: pointer;
-    font-size: 16px;
+    font-size: 12px;
+}
+
+#copy-btn {
+    padding: 7px;
 }
 
 #copy-btn:hover {
@@ -104,7 +107,6 @@ a:hover {
     align-items: center;
     justify-content: space-between;
     flex-wrap: wrap;
-    /* para mobile, se precisar quebrar */
     gap: 10px;
 }
 
@@ -121,10 +123,114 @@ a:hover {
     width: auto !important;
 }
 
+#lang-switch {
+    text-align: center;
+    display: flex;
+    flex-direction: row;
+    vertical-align: center;
+}
+
+#lang-switch button {
+    margin: 0 5px;
+    padding: 6px 12px;
+    border: none;
+    border-radius: 4px;
+    background-color: #eee;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+#lang-switch button:hover {
+    background-color: #ddd;
+}
+
+#top_container { 
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.user-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center; /* <- isso alinha verticalmente */
+    background-color: #f0f4f8;
+    padding: 10px 15px;
+    border-radius: 6px;
+    font-size: 15px;
+    color: #333;
+}
+
+.logout-link:hover {
+    background-color: #c0392b;
+}
+
+.user-info  a{
+    margin-top: 0;
+    margin-left: 10px;
+}
+
+.user-info p {
+    margin: 0;
+    line-height: 1; /* garante que fique centralizado */
+}
+
+.logout-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #e74c3c;
+    color: white;
+    padding: 6px 12px;
+    border-radius: 4px;
+    text-decoration: none;
+    font-size: 14px;
+    height: 100%; /* opcional se quiser altura igual à div */
+}
+
+.logout-link:hover {
+    background-color: #c0392b;
+}
+
+
+.logout-link {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    background-color: #e74c3c;
+    color: white;
+    padding: 6px 12px;
+    border-radius: 4px;
+    text-decoration: none;
+    font-size: 14px;
+}
+
+.logout-link:hover {
+    background-color: #c0392b;
+}
+
+.transcription-box {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    background-color: #f9f9f9;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding-left: 10px;
+    padding-right: 10px;
+    margin-top: 20px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+    font-size: 14px;
+    line-height: 1.2;
+    color: #333;
+    text-align: justify;
+    word-break: break-word;
+}
+
 @media (max-width: 600px) {
     html {
         font-size: 16px;
-        /* aumenta todas as fontes proporcionalmente */
     }
 
     body {
@@ -133,7 +239,6 @@ a:hover {
 
     .container {
         min-height: 90vh;
-        /* 90% da altura da viewport */
         width: 100%;
         margin: 0;
         border-radius: 0;
