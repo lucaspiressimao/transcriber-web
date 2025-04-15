@@ -48,6 +48,9 @@ def send_email_transcription(to_email, transcription):
 def get_lang(request: Request) -> str:
     return request.query_params.get("lang") or request.cookies.get("lang") or "pt"
 
+def get_email(request: Request) -> str:
+    return request.cookies.get("last_email") or ""
+
 @app.on_event("startup")
 async def startup():
     load_translations()
@@ -68,7 +71,8 @@ async def home(request: Request, current_user=Depends(get_current_user)):
     response =  templates.TemplateResponse("index.html", {
         "request": request,
         "user": current_user.username if current_user else None,
-        "t": get_translations(get_lang(request))
+        "t": get_translations(get_lang(request)),
+        "last_email": get_email(request)
     })
 
     if not current_user:
@@ -98,12 +102,17 @@ async def upload_audio(
         except Exception as e:
             print(f"Erro ao enviar e-mail: {e}")
             
-    return templates.TemplateResponse("index.html", {
+    response = templates.TemplateResponse("index.html", {
         "request": request,
         "user": current_user.username,
         "transcription": transcription,
-        "t": get_translations(get_lang(request))
+        "t": get_translations(get_lang(request)),
+        "last_email": get_email(request)
     })
+
+    response.set_cookie(key="last_email",value=email,httponly=True)
+
+    return response
 
 @app.get("/login")
 async def login(
@@ -112,7 +121,8 @@ async def login(
     return templates.TemplateResponse("index.html", {
         "request": request, 
         "login_error": False,
-        "t": get_translations(get_lang(request))
+        "t": get_translations(get_lang(request)),
+        "last_email": get_email(request)
     })
 
 @app.post("/login")
@@ -127,7 +137,8 @@ async def login(
         return templates.TemplateResponse("index.html", {
             "request": request, 
             "login_error": True,
-            "t": get_translations(get_lang(request))
+            "t": get_translations(get_lang(request)),
+            "last_email": get_email(request)
         })
     token = create_access_token(user.username)
     response = RedirectResponse(url="/", status_code=HTTP_302_FOUND)

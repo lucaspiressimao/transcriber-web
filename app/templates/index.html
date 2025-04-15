@@ -29,10 +29,10 @@
     <form id="uploadForm">
       <input type="file" name="file" id="file-input" accept=".m4a,.mp3,.wav,.ogg,.webm,.aac" required />
       <label>
-        <input type="checkbox" name="send_email" id="send_email" />
+        <input type="checkbox" name="send_email" id="send_email" {% if last_email %}checked{% endif %}/>
         {{ t.send_email }}
       </label>
-      <input type="text" name="email" id="email"/>
+      <input type="text" name="email" id="email" value="{{ last_email }}"/>
       <button type="submit">{{ t.transcribe }}</button>
     </form>
     {% else %}
