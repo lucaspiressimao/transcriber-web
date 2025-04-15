@@ -68,7 +68,7 @@ async def upload_audio(
     file: UploadFile = File(...),
     current_user=Depends(get_current_user)
 ):
-    allowed_extensions = ('.mp3', '.mp4', '.mpeg', '.mpga', '.m4a', '.wav', '.webm', '.ogg', '.oga', '.flac')
+    allowed_extensions = ('.mp3', '.mp4', '.mpeg', '.mpga', '.m4a', '.wav', '.webm', '.ogg', '.oga', '.flac', 'aac')
     if not file.filename.lower().endswith(allowed_extensions):
         return HTMLResponse(
             content="Formato de arquivo não suportado.",

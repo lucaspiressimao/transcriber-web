@@ -2,7 +2,8 @@ from openai import OpenAI
 import os
 import math
 import tempfile
-import subprocess 
+import subprocess
+import uuid
 from pydub import AudioSegment
 from fastapi import UploadFile
 
@@ -11,6 +12,20 @@ client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 # Tamanho máximo permitido por segmento (em bytes)
 MAX_FILE_SIZE = 24 * 1024 * 1024  # 24MB
 
+def convert_to_wav(input_path: str) -> str:
+    output_path = f"/tmp/{uuid.uuid4().hex}.wav"
+    try:
+        subprocess.run(
+            ["ffmpeg", "-y", "-i", input_path, output_path],
+            check=True,
+            stdout=subprocess.DEVNULL,
+            stderr=subprocess.DEVNULL
+        )
+        return output_path
+    except subprocess.CalledProcessError as e:
+        print(f"Erro ao converter {input_path} para wav: {e}")
+        raise Exception("Falha ao converter áudio para WAV.")
+    
 def is_valid_audio(file_path: str) -> bool:
     try:
         result = subprocess.run(
@@ -47,15 +62,10 @@ def split_audio_by_size(file_path, max_size=MAX_FILE_SIZE):
     return segments
 
 def transcribe_audio(file_path):
-    """Transcreve o áudio usando Whisper da OpenAI com fallback para divisão."""
-    # Converte M4A para WAV se necessário
-    if file_path.endswith(".m4a"):
-        audio = AudioSegment.from_file(file_path, format="m4a")
-        with tempfile.NamedTemporaryFile(suffix=".wav", delete=False) as temp_wav:
-            audio.export(temp_wav.name, format="wav")
-            file_path = temp_wav.name
+    # Converte para .wav antes de tudo
+    converted_path = convert_to_wav(file_path)
 
-    segments = split_audio_by_size(file_path)
+    segments = split_audio_by_size(converted_path)
 
     transcriptions = []
     for segment in segments:
@@ -66,8 +76,11 @@ def transcribe_audio(file_path):
             )
             transcriptions.append(response.text)
 
-        if segment != file_path:
+        if segment != converted_path:
             os.remove(segment)
+
+    if converted_path != file_path:
+        os.remove(converted_path)
 
     return " ".join(transcriptions)
 
