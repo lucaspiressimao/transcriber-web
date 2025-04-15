@@ -14,6 +14,7 @@
     "upload_error": "Unsupported file format.",
     "success_copy": "✅ Transcription copied to clipboard!",
     "error_copy": "Failed to copy",
-    "enter": "Enter"
+    "enter": "Enter",
+    "send_email": "Send transcription to email"
   }
   

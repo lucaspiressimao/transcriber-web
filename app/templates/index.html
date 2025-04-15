@@ -28,6 +28,11 @@
     {% if user %}
     <form id="uploadForm">
       <input type="file" name="file" id="file-input" accept=".m4a,.mp3,.wav,.ogg,.webm,.aac" required />
+      <label>
+        <input type="checkbox" name="send_email" id="send_email" />
+        {{ t.send_email }}
+      </label>
+      <input type="text" name="email" id="email"/>
       <button type="submit">{{ t.transcribe }}</button>
     </form>
     {% else %}
@@ -68,8 +73,13 @@
       loader.style.display = "flex";
       transcriptionElement.innerText = "";
 
+      const emailInput = document.getElementById('email');
+      const sendEmailCheckbox = document.getElementById('send_email');
+
       const formData = new FormData();
       formData.append("file", file);
+      formData.append("email", emailInput.value);
+      formData.append("send_email", sendEmailCheckbox.checked ? "true" : "false");
 
       try {
         const response = await fetch("/upload", {

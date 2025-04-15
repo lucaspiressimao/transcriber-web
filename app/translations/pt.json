@@ -14,6 +14,7 @@
     "upload_error": "Formato de arquivo não suportado.",
     "success_copy": "✅ Transcrição copiada para a área de transferência!",
     "error_copy": "Erro ao copiar",
-    "enter": "Entrar"
+    "enter": "Entrar",
+    "send_email": "Enviar transcrição por e-mail"
   }
   

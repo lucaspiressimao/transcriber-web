@@ -6,6 +6,8 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
 from starlette.status import HTTP_302_FOUND
 from .i18n import load_translations, get_translations
+import smtplib
+from email.message import EmailMessage
 
 import os
 from dotenv import load_dotenv
@@ -30,6 +32,18 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+def send_email_transcription(to_email, transcription):
+    msg = EmailMessage()
+    msg["Subject"] = "Transcriber Audio"
+    msg["From"] = os.getenv("EMAIL_FROM")
+    msg["To"] = to_email
+    msg.set_content(f"{transcription}")
+
+    with smtplib.SMTP_SSL(os.getenv("SMTP_HOST"), int(os.getenv("SMTP_PORT")) , timeout=10) as server:
+        server.login(os.getenv("SMTP_USER"), os.getenv("SMTP_PASS"))
+        server.send_message(msg)
+
 
 def get_lang(request: Request) -> str:
     return request.query_params.get("lang") or request.cookies.get("lang") or "pt"
@@ -66,17 +80,24 @@ async def home(request: Request, current_user=Depends(get_current_user)):
 async def upload_audio(
     request: Request,
     file: UploadFile = File(...),
+    send_email: bool = Form(False),
+    email: str = Form(""),
     current_user=Depends(get_current_user)
 ):
+    print
     allowed_extensions = ('.mp3', '.mp4', '.mpeg', '.mpga', '.m4a', '.wav', '.webm', '.ogg', '.oga', '.flac', 'aac')
     if not file.filename.lower().endswith(allowed_extensions):
         return HTMLResponse(
             content="Formato de arquivo não suportado.",
             status_code=400
         )
-
     transcription = await transcribe_uploaded_file(file)
-
+    if send_email and email:
+        try:
+            send_email_transcription(email, transcription)
+        except Exception as e:
+            print(f"Erro ao enviar e-mail: {e}")
+            
     return templates.TemplateResponse("index.html", {
         "request": request,
         "user": current_user.username,
