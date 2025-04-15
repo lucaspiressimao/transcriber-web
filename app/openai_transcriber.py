@@ -2,6 +2,7 @@ from openai import OpenAI
 import os
 import math
 import tempfile
+import subprocess 
 from pydub import AudioSegment
 from fastapi import UploadFile
 
@@ -10,6 +11,18 @@ client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 # Tamanho máximo permitido por segmento (em bytes)
 MAX_FILE_SIZE = 24 * 1024 * 1024  # 24MB
 
+def is_valid_audio(file_path: str) -> bool:
+    try:
+        result = subprocess.run(
+            ["ffmpeg", "-v", "error", "-i", file_path, "-f", "null", "-"],
+            stderr=subprocess.PIPE,
+            stdout=subprocess.DEVNULL
+        )
+        return result.returncode == 0
+    except Exception as e:
+        print("Erro ao validar áudio:", e)
+        return False
+    
 def split_audio_by_size(file_path, max_size=MAX_FILE_SIZE):
     """Divide o áudio em segmentos menores para evitar erro 413."""
     audio = AudioSegment.from_file(file_path)
@@ -63,10 +76,17 @@ async def transcribe_uploaded_file(uploaded_file: UploadFile) -> str:
     """Lida com UploadFile do FastAPI e chama a transcrição real."""
     suffix = os.path.splitext(uploaded_file.filename)[-1]
     with tempfile.NamedTemporaryFile(delete=False, suffix=suffix) as tmp:
-        tmp.write(await uploaded_file.read())
+        with open(tmp.name, "wb") as buffer:
+            while True:
+                chunk = await uploaded_file.read(1024 * 1024)
+                if not chunk:
+                    break
+                buffer.write(chunk)
         tmp_path = tmp.name
 
     try:
+        if not is_valid_audio(tmp_path):
+            raise HTTPException(status_code=400, detail="Arquivo de áudio corrompido ou inválido.")
         return transcribe_audio(tmp_path)
     finally:
         os.remove(tmp_path)
