@@ -81,6 +81,7 @@ async def home(request: Request, current_user=Depends(get_current_user)):
 
     if not current_user:
         response.delete_cookie("access_token")
+        response = RedirectResponse("/login", status_code=HTTP_302_FOUND)
 
     return response
 
@@ -92,7 +93,11 @@ async def upload_audio(
     email: str = Form(""),
     current_user=Depends(get_current_user)
 ):
-    print
+    if not current_user:
+        response.delete_cookie("access_token")
+        response = RedirectResponse("/login", status_code=HTTP_302_FOUND)
+        return response
+    
     allowed_extensions = ('.mp3', '.mp4', '.mpeg', '.mpga', '.m4a', '.wav', '.webm', '.ogg', '.oga', '.flac', 'aac')
     if not file.filename.lower().endswith(allowed_extensions):
         return HTMLResponse(
