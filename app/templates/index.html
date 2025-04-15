@@ -29,7 +29,7 @@
     <form id="uploadForm">
       <input type="file" name="file" id="file-input" accept=".m4a,.mp3,.wav,.ogg,.webm,.aac" required />
       <label>
-        <input type="checkbox" name="send_email" id="send_email" {% if last_email %}checked{% endif %}/>
+        <input type="checkbox" name="send_email" id="send_email" {% if email_checked %}checked{% endif %}/>
         {{ t.send_email }}
       </label>
       <input type="text" name="email" id="email" value="{{ last_email }}"/>
@@ -64,6 +64,29 @@
     const loader = document.getElementById("loader");
     const fileInput = document.getElementById("file-input");
     const transcriptionElement = document.getElementById("transcription");
+    const emailChecked = document.getElementById('send_email');
+    
+    function getCookie(name) {
+      const cookies = document.cookie.split("; ");
+      for (let cookie of cookies) {
+        const [key, value] = cookie.split("=");
+        if (key === name) return decodeURIComponent(value);
+      }
+      return null;
+    }
+
+    const sendEmail = getCookie("send_email");
+    if (sendEmail) {
+      document.getElementById("send_email").checked = true;
+    }
+
+    emailChecked?.addEventListener('change', function () {
+      if (emailChecked.checked) {
+        document.cookie = "send_email=true; path=/";
+      } else {
+        document.cookie = "send_email=; path=/";
+      }
+    });
 
     uploadForm?.addEventListener("submit", async function (e) {
       e.preventDefault();

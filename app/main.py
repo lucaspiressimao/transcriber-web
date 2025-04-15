@@ -51,6 +51,9 @@ def get_lang(request: Request) -> str:
 def get_email(request: Request) -> str:
     return request.cookies.get("last_email") or ""
 
+def get_email_checkbox(request: Request) -> str:
+    return request.cookies.get("email_checked") or ""
+
 @app.on_event("startup")
 async def startup():
     load_translations()
@@ -72,7 +75,8 @@ async def home(request: Request, current_user=Depends(get_current_user)):
         "request": request,
         "user": current_user.username if current_user else None,
         "t": get_translations(get_lang(request)),
-        "last_email": get_email(request)
+        "last_email": get_email(request),
+        "last_email_checkbox": get_email_checkbox(request)
     })
 
     if not current_user:
@@ -107,10 +111,16 @@ async def upload_audio(
         "user": current_user.username,
         "transcription": transcription,
         "t": get_translations(get_lang(request)),
-        "last_email": get_email(request)
+        "last_email": get_email(request),
+        "last_email_checkbox": get_email_checkbox(request)
     })
-
-    response.set_cookie(key="last_email",value=email,httponly=True)
+    
+    if send_email:
+        response.set_cookie(key="last_email",value=email,httponly=True)
+        response.set_cookie(key="email_checked",value=send_email,httponly=True)
+    else:
+        response.delete_cookie("last_email")
+        response.delete_cookie("email_checked")
 
     return response
 
@@ -122,7 +132,8 @@ async def login(
         "request": request, 
         "login_error": False,
         "t": get_translations(get_lang(request)),
-        "last_email": get_email(request)
+        "last_email": get_email(request),
+        "last_email_checkbox": get_email_checkbox(request)
     })
 
 @app.post("/login")
@@ -138,7 +149,8 @@ async def login(
             "request": request, 
             "login_error": True,
             "t": get_translations(get_lang(request)),
-            "last_email": get_email(request)
+            "last_email": get_email(request),
+            "last_email_checkbox": get_email_checkbox(request)
         })
     token = create_access_token(user.username)
     response = RedirectResponse(url="/", status_code=HTTP_302_FOUND)
