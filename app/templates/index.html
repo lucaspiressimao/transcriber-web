@@ -6,6 +6,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>{{ t.title }}</title>
   <link rel="stylesheet" href="/static/style.css" />
+  <link rel="manifest" href="/static/manifest.json" />
+  <meta name="theme-color" content="#2d2d2d" />
+  <link rel="apple-touch-icon" href="/static/icons/icon-192.png">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
 </head>
 
 <body>
@@ -29,10 +34,10 @@
     <form id="uploadForm">
       <input type="file" name="file" id="file-input" accept=".m4a,.mp3,.wav,.ogg,.webm,.aac" required />
       <label>
-        <input type="checkbox" name="send_email" id="send_email" {% if email_checked %}checked{% endif %}/>
+        <input type="checkbox" name="send_email" id="send_email" {% if email_checked %}checked{% endif %} />
         {{ t.send_email }}
       </label>
-      <input type="text" name="email" id="email" value="{{ last_email }}"/>
+      <input type="text" name="email" id="email" value="{{ last_email }}" />
       <button type="submit">{{ t.transcribe }}</button>
     </form>
     {% else %}
@@ -59,106 +64,7 @@
     <div style="position:relative; top:5%; font-size:24px;">⏳ {{ t.transcribing_wait }}</div>
   </div>
 
-  <script>
-    const uploadForm = document.getElementById("uploadForm");
-    const loader = document.getElementById("loader");
-    const fileInput = document.getElementById("file-input");
-    const transcriptionElement = document.getElementById("transcription");
-    const emailChecked = document.getElementById('send_email');
-    
-    function getCookie(name) {
-      const cookies = document.cookie.split("; ");
-      for (let cookie of cookies) {
-        const [key, value] = cookie.split("=");
-        if (key === name) return decodeURIComponent(value);
-      }
-      return null;
-    }
-
-    const sendEmail = getCookie("send_email");
-    if (sendEmail) {
-      document.getElementById("send_email").checked = true;
-    }
-
-    emailChecked?.addEventListener('change', function () {
-      if (emailChecked.checked) {
-        document.cookie = "send_email=true; path=/";
-      } else {
-        document.cookie = "send_email=; path=/";
-      }
-    });
-
-    uploadForm?.addEventListener("submit", async function (e) {
-      e.preventDefault();
-      const file = fileInput.files[0];
-      if (!file) return;
-
-      loader.style.display = "flex";
-      transcriptionElement.innerText = "";
-
-      const emailInput = document.getElementById('email');
-      const sendEmailCheckbox = document.getElementById('send_email');
-
-      const formData = new FormData();
-      formData.append("file", file);
-      formData.append("email", emailInput.value);
-      formData.append("send_email", sendEmailCheckbox.checked ? "true" : "false");
-
-      try {
-        const response = await fetch("/upload", {
-          method: "POST",
-          body: formData
-        });
-
-        const text = await response.text();
-        if (!response.ok) throw new Error(text);
-
-        document.open();
-        document.write(text);
-        document.close();
-      } catch (err) {
-        loader.innerHTML = `<div style="color:red;">❌ {{ t.transcribing_error }}: ${err.message}</div>`;
-        setTimeout(() => loader.style.display = "none", 3000);
-      }
-    });
-
-    function setLang(lang) {
-      document.cookie = "lang=" + lang + "; path=/";
-      window.location.reload();
-    }
-
-    function copyTranscription() {
-      const texto = document.getElementById("transcription").innerText;
-
-      if (navigator.clipboard && window.isSecureContext) {
-        navigator.clipboard.writeText(texto).then(() => {
-          alert("✅ {{ t.success_copy }}");
-        }).catch(err => {
-          alert("{{ t.error_copy }}: " + err);
-        });
-      } else {
-        // fallback para navegadores mais antigos
-        const textArea = document.createElement("textarea");
-        textArea.value = texto;
-        textArea.style.position = "fixed";
-        textArea.style.top = "0";
-        textArea.style.left = "0";
-        textArea.style.opacity = "0";
-        document.body.appendChild(textArea);
-        textArea.focus();
-        textArea.select();
-
-        try {
-          const success = document.execCommand("copy");
-          alert(success ? "✅ {{ t.success_copy }}" : "{{ t.error_copy }}");
-        } catch (err) {
-          alert("{{ t.error_copy }}: " + err);
-        }
-
-        document.body.removeChild(textArea);
-      }
-    }
-  </script>
+  <script src="/static/main.js"></script>
 </body>
 
 </html>

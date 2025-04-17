@@ -34,7 +34,7 @@ services:
     extra_hosts:
       - "local.transcriber.dooloop.com.br:host-gateway"
     environment:
-      - VIRTUAL_HOST=transcriber.dooloop.com.br,local.transcriber.dooloop.com.br
+      - VIRTUAL_HOST=transcriber.dooloop.com.br,local.transcriber.dooloop.com.br,192.168.31.240
       - VIRTUAL_PORT=8000
       - DATABASE_URL=postgresql+asyncpg://user:password@db:5432/transcriber
       - OPENAI_API_KEY=${OPENAI_API_KEY}
