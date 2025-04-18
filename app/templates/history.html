@@ -1,35 +1,40 @@
 {% extends "base.html" %}
-{% block content %}
 
-<h1><i data-lucide="file-text"></i>{{ t.history_title }}</h1>
+{% block content %}
+<h1><i data-lucide="file-text"></i> {{ t.history_title }}</h1>
 
 {% if transcriptions %}
-  <ul>
-    {% for item in transcriptions %}
-      <li style="margin-bottom: 1.5rem;">
-        <strong>{{ item.filename }}</strong><br />
-        <div style="margin: 0.5rem 0;">
-          {{ item.text[:150] }}{% if item.text|length > 150 %}...{% endif %}
-        </div>
-        <small>{{ item.created_at.strftime("%d/%m/%Y %H:%M") }}</small>
-      </li>
-      <hr />
-    {% endfor %}
-  </ul>
-
-  <div class="pagination" style="margin-top: 1rem;">
-    {% if page > 1 %}
-      <a href="?page={{ page - 1 }}">⬅️ {{ t.prev_page }}</a>
-    {% endif %}
-
-    <span style="margin: 0 1rem;">{{ t.page }} {{ page }} {{ t.of }} {{ total_pages }}</span>
-
-    {% if page < total_pages %}
-      <a href="?page={{ page + 1 }}">{{ t.next_page }} ➡️</a>
-    {% endif %}
+{% for item in transcriptions %}
+<div class="transcription-card">
+  <div class="transcription-header" onclick="toggleTranscription(this)">
+    <h3>📄 {{ item.filename }}</h3>
+    <button class="toggle-btn" data-show="{{ t.show }}" data-hide="{{ t.hide }}">
+      {{ t.show }}
+    </button>
   </div>
-{% else %}
-  <p>{{ t.no_transcriptions }}</p>
-{% endif %}
+  <p class="transcription-time">
+    {{ item.created_at.strftime('%d/%m/%Y %H:%M') if item.created_at else '' }}
+  </p>
+  <div class="transcription-text">
+    {{ item.text or '' }}
+  </div>
+</div>
+{% endfor %}
 
+<div class="pagination" style="margin-top: 1rem; text-align: center;">
+  {% if page > 1 %}
+  <a href="?page={{ page - 1 }}">⬅️ {{ t.prev_page }}</a>
+  {% endif %}
+
+  <span style="margin: 0 1rem;">
+    {{ t.page }} {{ page }} {{ t.of }} {{ total_pages }}
+  </span>
+
+  {% if page < total_pages %} <a href="?page={{ page + 1 }}">{{ t.next_page }} ➡️</a>
+    {% endif %}
+</div>
+
+{% else %}
+<p>{{ t.no_transcriptions }}</p>
+{% endif %}
 {% endblock %}

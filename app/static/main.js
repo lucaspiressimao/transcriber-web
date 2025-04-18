@@ -141,3 +141,9 @@ function copyTranscription() {
         document.body.removeChild(textArea);
     }
 }
+function toggleTranscription(headerEl) {
+    const textEl = headerEl.nextElementSibling.nextElementSibling;
+    const btn = headerEl.querySelector('.toggle-btn');
+    const isOpen = textEl.classList.toggle('open');
+    btn.textContent = isOpen ? btn.dataset.hide : btn.dataset.show;
+}
