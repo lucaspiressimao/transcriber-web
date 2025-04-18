@@ -35,6 +35,6 @@ deploy-changes:
 			echo "📤 Copiando $$f..."; \
 			scp "$(LOCAL_BASE)/$$f" "$(SERVER):$(DEST)/$$f"; \
 		done; \
-		ssh $(SERVER) "cd $(DEST)/transcriber-web && docker compose down && docker compose up -d"; \
+		ssh $(SERVER) "cd $(DEST)/transcriber-web && docker compose down && docker compose up -d --build"; \
 		echo "✅ Deploy done."; \
 	fi
