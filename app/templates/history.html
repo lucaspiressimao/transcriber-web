@@ -5,8 +5,12 @@
 
 {% if transcriptions %}
 {% for item in transcriptions %}
-<div class="transcription-card">
+<div id="card-{{ item.id }}" class="transcription-card">
   <div class="transcription-header" onclick="toggleTranscription(this)">
+    <button class="link-btn danger" onclick="event.stopPropagation(); deleteTranscription({{item.id}})">
+      <i id="trash_bin" data-lucide="trash-2"></i> 
+      <!-- {{ t.delete }} -->
+    </button>
     <h3>📄 {{ item.filename }}</h3>
     <div class="transcription-header-right">
       <button onclick="copyTranscription()" id="copy-btn" class="btn_clean">

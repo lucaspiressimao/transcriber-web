@@ -325,7 +325,7 @@ a:hover {
     align-items: center;
 }
 
-.pagination span { 
+.pagination span {
     background-color: transparent !important;
     color: #007bff !important;
     display: flex;
@@ -386,6 +386,75 @@ a:hover {
     margin-left: 10px;
 }
 
+#loader {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6);
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.loader-content {
+    text-align: center;
+    color: #fff;
+    font-size: 18px;
+}
+
+.loader-content p {
+    margin-top: 16px;
+    font-weight: 500;
+}
+
+.spinner {
+    width: 40px;
+    height: 40px;
+    border: 4px solid #ffffff33;
+    border-top: 4px solid #ffffff;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin: 0 auto;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+#trash_bin {
+    width: 14px;
+    height: 14px;
+    stroke-width: 1.2;
+    z-index: 99999;
+}
+
+.link-btn {
+    background: none;
+    border: none;
+    color: #1d4ed8;
+    background-color: #dc2626;
+    cursor: pointer;
+    font-size: 8px;
+    /* margin-left: 1rem; */
+    display: inline-flex;
+    align-items: center;
+    padding: 5px;
+    /* gap: 4px; */
+}
+
+.link-btn:hover {
+    background-color: #dc262650 !important;
+}
+
+.link-btn.danger {
+    color: #f6f6f6;
+}
 
 
 @media (max-width: 600px) {

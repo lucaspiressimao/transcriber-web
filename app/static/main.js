@@ -56,6 +56,9 @@ document.addEventListener("DOMContentLoaded", function () {
     const fileInput = document.getElementById("file-input");
     const transcriptionElement = document.getElementById("transcription");
     const emailChecked = document.getElementById('send_email');
+    if (loader) {
+        loader.style.display = "none";
+    }
 
     const sendEmail = getCookie("send_email");
     if (sendEmail) {
@@ -72,7 +75,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     uploadForm?.addEventListener("submit", async function (e) {
         e.preventDefault();
-        console.log("✅ Submit chamado!");
+
         const file = fileInput.files[0];
         if (!file) return;
 
@@ -99,8 +102,9 @@ document.addEventListener("DOMContentLoaded", function () {
             document.open();
             document.write(text);
             document.close();
+
         } catch (err) {
-            loader.innerHTML = `<div style="color:red;">❌ Erro ao transcrever: ${err.message}</div>`;
+            loader.innerHTML = `<div style="color:red;">❌ Error: ${err.message}</div>`;
             setTimeout(() => loader.style.display = "none", 3000);
         }
     });
@@ -146,4 +150,25 @@ function toggleTranscription(headerEl) {
     const btn = headerEl.querySelector('.toggle-btn');
     const isOpen = textEl.classList.toggle('open');
     btn.textContent = isOpen ? btn.dataset.hide : btn.dataset.show;
+}
+
+async function deleteTranscription(id) {
+    if (!confirm("Tem certeza que deseja apagar esta transcrição?")) return;
+
+    try {
+        const response = await fetch(`/delete/${id}`, {
+            method: "DELETE"
+        });
+
+        if (response.ok) {
+            const card = document.getElementById(`card-${id}`);
+            if (card) card.remove();
+            window.location.href = "/history";
+        } else {
+            alert("❌ Erro ao apagar transcrição");
+        }
+    } catch (err) {
+        alert("❌ Falha na comunicação com o servidor");
+        console.error(err);
+    }
 }

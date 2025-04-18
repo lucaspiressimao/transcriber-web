@@ -22,6 +22,8 @@ from .auth import get_current_user, create_access_token, authenticate_user
 from .database import init_db, get_db
 from .openai_transcriber import transcribe_uploaded_file
 
+from fastapi import HTTPException, status
+
 load_dotenv()
 
 app = FastAPI()
@@ -226,3 +228,24 @@ async def logout():
     response = RedirectResponse(url="/", status_code=HTTP_302_FOUND)
     response.delete_cookie("access_token")
     return response
+
+@app.delete("/delete/{transcription_id}")
+async def delete_transcription(
+    transcription_id: int,
+    current_user=Depends(get_current_user),
+    db: AsyncSession = Depends(get_db)
+):
+    if not current_user:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
+
+    result = await db.execute(
+        select(Transcription).where(Transcription.id == transcription_id, Transcription.user_id == current_user.id)
+    )
+    transcription = result.scalar_one_or_none()
+
+    if not transcription:
+        raise HTTPException(status_code=404, detail="Transcription not found")
+
+    await db.delete(transcription)
+    await db.commit()
+    return {"status": "deleted"}
