@@ -1,3 +1,12 @@
+* {
+    box-sizing: border-box;
+}
+
+html, body {
+    max-width: 100vw;
+    overflow-x: hidden;
+}
+
 body {
     font-family: sans-serif;
     background: #f6f6f6;
@@ -6,8 +15,9 @@ body {
 }
 
 .container {
+    width: 100%;
     max-width: 500px;
-    margin: 40px auto;
+    margin: auto;
     background: white;
     padding: 20px;
     border-radius: 8px;
@@ -349,8 +359,14 @@ a:hover {
 
 .transcription-header h3 {
     margin: 0;
+    margin-left: 5px;
     font-size: 16px;
     font-weight: 600;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
+    display: block;
 }
 
 .transcription-time {
@@ -468,7 +484,7 @@ a:hover {
 
     .container {
         min-height: 90vh;
-        width: 100%;
+        width:100%;
         margin: 0;
         border-radius: 0;
         box-shadow: none;
