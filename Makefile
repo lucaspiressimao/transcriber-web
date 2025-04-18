@@ -1,20 +1,40 @@
+SERVER ?= $(DEPLOY_SERVER)
+SERVER ?= root@111.222.333.444
+DEST := /home
+LOCAL_BASE := $(shell pwd)
+
 run: build
-	docker-compose -f docker-compose-local.yml up
+	docker-compose up
 
 build:
-	docker-compose -f docker-compose-local.yml build --no-cache
+	docker-compose build --no-cache
 
 up-build:
-	docker-compose -f docker-compose-local.yml up --build
+	docker-compose up --build
 	
 up: 
-	docker-compose -f docker-compose-local.yml up
+	docker-compose up
 
 stop:
-	docker-compose -f docker-compose-local.yml down
+	docker-compose down
 
 logs:
-	docker-compose -f docker-compose-local.yml logs -f
+	docker-compose logs -f
 
 psql:
 	docker exec -it $$(docker-compose ps -q db) psql -U user -d transcriber
+
+
+deploy-changes:
+	@echo "🔍 Checking changes from last tag..."
+	@FILES=$$(git diff --name-only $$(git describe --tags --abbrev=0)..HEAD); \
+	if [ -z "$$FILES" ]; then \
+		echo "✅ No changes"; \
+	else \
+		for f in $$FILES; do \
+			echo "📤 Copiando $$f..."; \
+			scp "$(LOCAL_BASE)/$$f" "$(SERVER):$(DEST)/$$f"; \
+		done; \
+		ssh $(SERVER) "cd $(DEST)/transcriber-web && docker compose down && docker compose up -d"; \
+		echo "✅ Deploy done."; \
+	fi
