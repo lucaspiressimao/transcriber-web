@@ -10,3 +10,4 @@ asyncpg
 openai
 python-dotenv
 pydub
+alembic

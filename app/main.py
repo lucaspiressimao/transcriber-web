@@ -8,7 +8,7 @@ from starlette.status import HTTP_302_FOUND
 from .i18n import load_translations, get_translations
 import smtplib
 from email.message import EmailMessage
-
+from .models import Transcription
 import os
 from dotenv import load_dotenv
 from .auth import create_default_user
@@ -58,7 +58,7 @@ def get_email_checkbox(request: Request) -> str:
 async def startup():
     load_translations()
     await init_db()
-    # Carrega usuários do .env
+    
     default_users = os.getenv("DEFAULT_USERS")
     if default_users:
         async with AsyncSessionLocal() as db:
@@ -91,7 +91,8 @@ async def upload_audio(
     file: UploadFile = File(...),
     send_email: bool = Form(False),
     email: str = Form(""),
-    current_user=Depends(get_current_user)
+    current_user=Depends(get_current_user),
+    db: AsyncSession = Depends(get_db)
 ):
     if not current_user:
         response.delete_cookie("access_token")
@@ -105,6 +106,18 @@ async def upload_audio(
             status_code=400
         )
     transcription = await transcribe_uploaded_file(file)
+    transcription_language = ""
+
+
+    new_transcription = Transcription(
+        user_id=current_user.id,
+        filename=file.filename,
+        text=transcription,
+        language=transcription_language
+    )
+    db.add(new_transcription)
+    await db.commit()
+
     if send_email and email:
         try:
             send_email_transcription(email, transcription)

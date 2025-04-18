@@ -6,12 +6,31 @@ services:
     container_name: nginx-proxy
     ports:
       - "80:80"
+      - "443:443"
     volumes:
       - /var/run/docker.sock:/tmp/docker.sock:ro
       - certs:/etc/nginx/certs
       - vhost:/etc/nginx/vhost.d
       - html:/usr/share/nginx/html
       - ./nginx-proxy.conf:/etc/nginx/conf.d/upload.conf:ro
+    networks:
+      - network
+
+  nginx-proxy-acme:
+    image: nginxproxy/acme-companion
+    container_name: nginx-proxy-acme
+    depends_on:
+      - nginx-proxy
+    environment:
+      - DEFAULT_EMAIL=seu-email@dominio.com
+    volumes_from:
+      - nginx-proxy
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - certs:/etc/nginx/certs
+      - acme:/etc/acme.sh
+      - vhost:/etc/nginx/vhost.d
+      - html:/usr/share/nginx/html
     networks:
       - network
 
@@ -34,7 +53,9 @@ services:
     extra_hosts:
       - "local.transcriber.dooloop.com.br:host-gateway"
     environment:
-      - VIRTUAL_HOST=transcriber.dooloop.com.br,local.transcriber.dooloop.com.br,192.168.31.240
+      - LETSENCRYPT_HOST=transcriber.dooloop.com.br
+      - LETSENCRYPT_EMAIL=seu-email@dominio.com
+      - VIRTUAL_HOST=transcriber.dooloop.com.br,local.transcriber.dooloop.com.br
       - VIRTUAL_PORT=8000
       - DATABASE_URL=postgresql+asyncpg://user:password@db:5432/transcriber
       - OPENAI_API_KEY=${OPENAI_API_KEY}

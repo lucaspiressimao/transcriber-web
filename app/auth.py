@@ -42,16 +42,9 @@ async def get_current_user(request: Request, db=Depends(get_db)):
     except JWTError:
         return None
 
-    # Se quiser validar com o banco, pode descomentar abaixo:
-    # result = await db.execute(select(User).where(User.username == username))
-    # user = result.scalars().first()
-    # return user
-
-    class UserMock:
-        def __init__(self, username):
-            self.username = username
-
-    return UserMock(username)
+    result = await db.execute(select(User).where(User.username == username))
+    user = result.scalars().first()
+    return user
 
 async def register_user(username: str, password: str, db):
     hashed = hash_password(password)

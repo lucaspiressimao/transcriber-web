@@ -10,8 +10,9 @@ Base = declarative_base()
 
 async def init_db():
     import app.models
-    async with engine.begin() as conn:
-        await conn.run_sync(Base.metadata.create_all)
+    # Do not create tables
+    # async with engine.begin() as conn:
+    #     await conn.run_sync(Base.metadata.create_all)
 
 async def get_db():
     db = AsyncSessionLocal()
