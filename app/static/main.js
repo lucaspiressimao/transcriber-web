@@ -72,6 +72,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     uploadForm?.addEventListener("submit", async function (e) {
         e.preventDefault();
+        console.log("✅ Submit chamado!");
         const file = fileInput.files[0];
         if (!file) return;
 

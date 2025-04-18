@@ -14,6 +14,10 @@ from dotenv import load_dotenv
 from .auth import create_default_user
 from .database import AsyncSessionLocal
 
+from fastapi import Query
+from sqlalchemy import select, func
+from sqlalchemy.future import select
+
 from .auth import get_current_user, create_access_token, authenticate_user
 from .database import init_db, get_db
 from .openai_transcriber import transcribe_uploaded_file
@@ -73,6 +77,7 @@ async def home(request: Request, current_user=Depends(get_current_user)):
     
     response =  templates.TemplateResponse("index.html", {
         "request": request,
+        "lang": get_lang(request),
         "user": current_user.username if current_user else None,
         "t": get_translations(get_lang(request)),
         "last_email": get_email(request),
@@ -84,6 +89,44 @@ async def home(request: Request, current_user=Depends(get_current_user)):
         response = RedirectResponse("/login", status_code=HTTP_302_FOUND)
 
     return response
+
+@app.get("/history", response_class=HTMLResponse)
+async def transcription_history(
+    request: Request,
+    page: int = Query(1, ge=1),
+    current_user=Depends(get_current_user),
+    db: AsyncSession = Depends(get_db)
+):
+    if not current_user:
+        return RedirectResponse("/login", status_code=HTTP_302_FOUND)
+
+    page_size = 10
+    offset = (page - 1) * page_size
+
+    result = await db.execute(
+        select(Transcription)
+        .where(Transcription.user_id == current_user.id)
+        .order_by(Transcription.created_at.desc())
+        .offset(offset)
+        .limit(page_size)
+    )
+    transcriptions = result.scalars().all()
+
+    count_result = await db.execute(
+        select(func.count(Transcription.id))
+        .where(Transcription.user_id == current_user.id)
+    )
+    total = count_result.scalar()
+
+    return templates.TemplateResponse("history.html", {
+        "request": request,
+        "lang": get_lang(request),
+        "user": current_user.username,
+        "transcriptions": transcriptions,
+        "page": page,
+        "total_pages": (total // page_size) + (1 if total % page_size else 0),
+        "t": get_translations(get_lang(request)),
+    })
 
 @app.post("/upload")
 async def upload_audio(
@@ -126,6 +169,7 @@ async def upload_audio(
             
     response = templates.TemplateResponse("index.html", {
         "request": request,
+        "lang": get_lang(request),
         "user": current_user.username,
         "transcription": transcription,
         "t": get_translations(get_lang(request)),
@@ -148,6 +192,7 @@ async def login(
 ):
     return templates.TemplateResponse("index.html", {
         "request": request, 
+        "lang": get_lang(request),
         "login_error": False,
         "t": get_translations(get_lang(request)),
         "last_email": get_email(request),
@@ -165,6 +210,7 @@ async def login(
     if not user:
         return templates.TemplateResponse("index.html", {
             "request": request, 
+            "lang": get_lang(request),
             "login_error": True,
             "t": get_translations(get_lang(request)),
             "last_email": get_email(request),

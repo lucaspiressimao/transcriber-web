@@ -15,6 +15,14 @@
     "success_copy": "✅ Transcription copied to clipboard!",
     "error_copy": "Failed to copy",
     "enter": "Enter",
-    "send_email": "Send transcription to email"
+    "send_email": "Send transcription to email",
+    "history_title": "Transcription History",
+    "prev_page": "Previous page",
+    "next_page": "Next page",
+    "page": "Page",
+    "of": "of",
+    "no_transcriptions": "No transcriptions found.",
+    "home": "Home",
+    "history": "History"
   }
   

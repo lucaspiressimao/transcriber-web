@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="{{ lang }}">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{{ t.title }}</title>
+  <link rel="stylesheet" href="/static/style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flag-icons@6/css/flag-icons.min.css" />
+  <link rel="manifest" href="/static/manifest.json" />
+  <meta name="theme-color" content="#2d2d2d" />
+  <link rel="apple-touch-icon" href="/static/icons/icon-192.png">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+</head>
+
+<body>
+  <div class="container">
+    <nav class="nav-bar">
+      <div class="nav-left">
+        <button class="btn_lang" onclick="setLang('pt')"><span class="fi fi-br"></span></button>
+        <button class="btn_lang" onclick="setLang('en')"><span class="fi fi-us"></span></button>
+      </div>
+      <div class="nav-right" id="lang-switch">
+        <a href="/" class="nav-link"><i data-lucide="home"></i> {{ t.home }}</a>
+        {% if user %}
+        <a href="/history" class="nav-link"><i data-lucide="file-text"></i> {{ t.history }}</a>
+        <a href="/logout" class="nav-link"><i data-lucide="log-out"></i> {{ t.logout }}</a>
+        {% endif %}
+      </div>
+    </nav>
+
+    {% block content %}{% endblock %}
+  </div>
+
+  <!-- Loader -->
+  <div id="loader"
+    style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:#fff; z-index:9999; text-align:center;">
+    <div style="position:relative; top:5%; font-size:24px;">⏳ {{ t.transcribing_wait }}</div>
+  </div>
+
+  <script src="/static/main.js"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      if (window.lucide) {
+        lucide.createIcons();
+      }
+    });
+  </script>
+</body>
+
+</html>

@@ -15,6 +15,14 @@
     "success_copy": "✅ Transcrição copiada para a área de transferência!",
     "error_copy": "Erro ao copiar",
     "enter": "Entrar",
-    "send_email": "Enviar transcrição por e-mail"
+    "send_email": "Enviar transcrição por e-mail",
+    "history_title": "Histórico de Transcrições",
+    "prev_page": "Página anterior",
+    "next_page": "Próxima página",
+    "page": "Página",
+    "of": "de",
+    "no_transcriptions": "Nenhuma transcrição encontrada.",
+    "home": "Home",
+    "history": "Histórico"
   }
   
