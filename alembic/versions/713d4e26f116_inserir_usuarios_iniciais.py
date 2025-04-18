@@ -25,9 +25,9 @@ users_table = table('users',
 )
 
 def upgrade() -> None:
-    op.bulk_insert(users_table, [
-        {"username": "admin", "hashed_password": "$2b$12$oFOvO5wZ9xbyqI4cbguAF.qoMC3tqeQn01qkk7bBXJ6jcKbbjXKqe"} #admin123
-    ])
+    # op.bulk_insert(users_table, [
+    #     {"username": "admin", "hashed_password": "$2b$12$oFOvO5wZ9xbyqI4cbguAF.qoMC3tqeQn01qkk7bBXJ6jcKbbjXKqe"}
+    # ])
     pass
 
 

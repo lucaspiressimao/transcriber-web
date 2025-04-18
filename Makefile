@@ -27,14 +27,6 @@ psql:
 
 deploy-changes:
 	@echo "🔍 Checking changes from last tag..."
-	@FILES=$$(git diff --name-only $$(git describe --tags --abbrev=0)..HEAD); \
-	if [ -z "$$FILES" ]; then \
-		echo "✅ No changes"; \
-	else \
-		for f in $$FILES; do \
-			echo "📤 Copiando $$f..."; \
-			scp "$(LOCAL_BASE)/$$f" "$(SERVER):$(DEST)/$$f"; \
-		done; \
-		ssh $(SERVER) "cd $(DEST)/transcriber-web && docker compose down && docker compose up -d --build"; \
-		echo "✅ Deploy done."; \
-	fi
+	rsync -avz --exclude 'venv/' --exclude '.git/' . $(SERVER):/home/transcriber-web/
+	ssh $(SERVER) "cd $(DEST)/transcriber-web && docker compose down && docker compose up -d --build"; \
+	echo "✅ Deploy done."; \
