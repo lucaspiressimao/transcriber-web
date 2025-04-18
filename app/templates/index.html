@@ -26,7 +26,10 @@
 {% endif %}
 
 <div id="transcription-box" class="transcription-box">
-  <button onclick="copyTranscription()" id="copy-btn">{{ t.copy_transcription }}</button>
+  <button onclick="copyTranscription()" id="copy-btn">
+    <i id="copy_icon" data-lucide="clipboard-copy"></i>
+    {{ t.copy_transcription }}
+  </button>
   <p id="transcription" style="white-space: pre-wrap;">{{ transcription or '' }}</p>
 </div>
 

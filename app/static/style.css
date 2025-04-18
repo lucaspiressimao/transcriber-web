@@ -104,13 +104,19 @@ a:hover {
     border: none;
     border-radius: 6px;
     cursor: pointer;
-    font-size: 12px;
-    padding: 7px;
+    font-size: 13px;
+    padding: 5px;
     width: auto !important;
 }
 
 #copy-btn:hover {
     background-color: #0056b3;
+}
+
+#copy_icon {
+    width: 14px;
+    height: 14px;
+    stroke-width: 1.2;
 }
 
 #transcription-bar {
@@ -291,6 +297,49 @@ a:hover {
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
+.btn_clean {
+    background-color: transparent !important;
+    color: #007bff !important;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.btn_clean:hover {
+    background-color: #007bff30 !important;
+}
+
+.pagination-full {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
+
+.pagination {
+    width: 60%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.pagination span { 
+    background-color: transparent !important;
+    color: #007bff !important;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.transcription-header-right {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+
 .transcription-header {
     display: flex;
     justify-content: space-between;
@@ -325,6 +374,7 @@ a:hover {
 .toggle-btn:hover {
     background-color: #007bff30;
 }
+
 
 .toggle-btn {
     padding: 6px 15px;

@@ -8,30 +8,38 @@
 <div class="transcription-card">
   <div class="transcription-header" onclick="toggleTranscription(this)">
     <h3>📄 {{ item.filename }}</h3>
-    <button class="toggle-btn" data-show="{{ t.show }}" data-hide="{{ t.hide }}">
-      {{ t.show }}
-    </button>
+    <div class="transcription-header-right">
+      <button onclick="copyTranscription()" id="copy-btn" class="btn_clean">
+        <i id="copy_icon" data-lucide="clipboard-copy"></i>
+        {{ t.copy_transcription }}
+      </button>
+      <button class="toggle-btn" data-show="{{ t.show }}" data-hide="{{ t.hide }}">
+        {{ t.show }}
+      </button>
+    </div>
   </div>
   <p class="transcription-time">
     {{ item.created_at.strftime('%d/%m/%Y %H:%M') if item.created_at else '' }}
   </p>
-  <div class="transcription-text">
+  <div class="transcription-text" id="transcription">
     {{ item.text or '' }}
   </div>
 </div>
 {% endfor %}
 
-<div class="pagination" style="margin-top: 1rem; text-align: center;">
-  {% if page > 1 %}
-  <a href="?page={{ page - 1 }}">⬅️ {{ t.prev_page }}</a>
-  {% endif %}
-
-  <span style="margin: 0 1rem;">
-    {{ t.page }} {{ page }} {{ t.of }} {{ total_pages }}
-  </span>
-
-  {% if page < total_pages %} <a href="?page={{ page + 1 }}">{{ t.next_page }} ➡️</a>
+<div class="pagination-full">
+  <div class="pagination" style="margin-top: 1rem; text-align: center;">
+    {% if page > 1 %}
+    <a href="?page={{ page - 1 }}">{{ t.prev_page }}</a>
     {% endif %}
+
+    <span style="margin: 0 1rem;">
+      {{ t.page }} {{ page }} {{ t.of }} {{ total_pages }}
+    </span>
+
+    {% if page < total_pages %} <a href="?page={{ page + 1 }}">{{ t.next_page }}</a>
+      {% endif %}
+  </div>
 </div>
 
 {% else %}

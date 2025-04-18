@@ -100,7 +100,7 @@ async def transcription_history(
     if not current_user:
         return RedirectResponse("/login", status_code=HTTP_302_FOUND)
 
-    page_size = 10
+    page_size = 5
     offset = (page - 1) * page_size
 
     result = await db.execute(
